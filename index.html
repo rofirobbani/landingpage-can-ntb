@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Change Agent Network - BPS Provinsi NTB</title>
+  <link rel="icon" href="img/logo-can-title.png" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,18 +117,23 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full font-sans text-gray-800 scroll-smooth overflow-auto">
-  <div id="app" class="w-full h-full"><!-- Navigation -->
+  <div id="app" class="w-full h-full">
+  <!-- Navigation -->
    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="flex items-center justify-between h-16 md:h-20"><!-- Logo -->
+     <div class="flex items-center justify-between h-16 md:h-20">
+      <!-- Logo -->
       <div class="flex items-center gap-3">
-       <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-bps-blue to-bps-blue-light flex items-center justify-center">
-        <svg class="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-       </div>
-       <div class="hidden sm:block"><span class="font-bold text-bps-blue text-lg">CAN</span> <span class="text-gray-500 text-sm block -mt-1">BPS NTB</span>
-       </div>
-      </div><!-- Desktop Navigation -->
+        <a href="#" class="flex items-center gap-3 group">
+          <img src="img/logo-can.png" alt="Logo CAN" class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-md group-hover:scale-105 transition-transform object-contain bg-white">
+          
+          <div class="hidden sm:flex flex-col justify-center">
+            <span class="font-bold text-bps-blue text-lg tracking-tight leading-none">CAN</span> 
+            <span class="text-gray-500 text-sm font-medium leading-tight">BPS NTB</span>
+          </div>
+      </a>
+      </div>
+      <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-8"><a href="#beranda" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Beranda</a> <a href="#tim" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Tim CAN</a> <a href="#program" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Program Unggulan</a>
       </div><!-- Mobile Menu Button --> <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
