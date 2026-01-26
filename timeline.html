@@ -38,16 +38,54 @@
       --fc-today-bg-color: rgba(245, 124, 0, 0.05);
     }
 
-    .fc-event { cursor: pointer; border: none; border-radius: 4px; padding: 2px; }
-    .fc-toolbar-title { font-size: 1.5rem !important; font-weight: 700; color: #1f2937; }
-    .fc-daygrid-day-number { color: #374151; font-weight: 600; text-decoration: none !important; }
-    .fc-col-header-cell-cushion { color: #003366; font-weight: 700; text-decoration: none !important; }
+    /* --- PERBAIKAN TAMPILAN KALENDER (VISIBILITY) --- */
     
-    /* Styling Kategori Warna Event */
-    .bg-event { background-color: #003366 !important; border-left: 4px solid #0055a4 !important; }
-    .bg-meeting { background-color: #2e7d32 !important; border-left: 4px solid #4caf50 !important; }
-    .bg-deadline { background-color: #dc2626 !important; border-left: 4px solid #ef4444 !important; }
-    .bg-holiday { background-color: #f57c00 !important; border-left: 4px solid #ff9800 !important; }
+    /* 1. Tampilan BULAN (Grid) */
+    .fc-daygrid-event {
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-size: 0.85rem;
+        border: none !important;
+        margin-top: 2px;
+        transition: transform 0.1s;
+    }
+    .fc-daygrid-event:hover {
+        transform: scale(1.02);
+        z-index: 50;
+    }
+    /* Memaksa teks Putih di tampilan Bulan */
+    .fc-event-main {
+        color: #ffffff !important; 
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    /* Hapus dot default di daygrid agar background full color */
+    .fc-daygrid-event-dot { display: none; }
+
+
+    /* 2. Tampilan LIST (Agenda) */
+    .fc-list-event:hover td {
+        background-color: #f3f4f6 !important;
+    }
+    /* Judul Event di List harus Hitam/Gelap agar kontras */
+    .fc-list-event-title {
+        color: #111827 !important; /* Gray-900 */
+        font-weight: 600 !important;
+    }
+    /* Waktu di List */
+    .fc-list-event-time {
+        color: #4b5563 !important; /* Gray-600 */
+        font-weight: 500;
+    }
+    /* Dot/Marker di list mengikuti warna event */
+    .fc-list-event-dot {
+        border-width: 6px !important;
+    }
+
+    /* General Toolbar Styles */
+    .fc-toolbar-title { font-size: 1.5rem !important; font-weight: 700; color: #1f2937; }
+    .fc-col-header-cell-cushion { color: #003366; font-weight: 700; text-decoration: none !important; }
+    .fc-daygrid-day-number { color: #374151; font-weight: 600; text-decoration: none !important; }
   </style>
 </head>
 <body class="h-full font-sans text-gray-800 bg-gray-50 flex flex-col">
@@ -99,36 +137,10 @@
      <div class="max-w-7xl mx-auto">
        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
          
-         <div class="mb-8 flex flex-wrap items-center justify-center gap-3 select-none">
-            <span class="text-sm font-bold text-gray-500 uppercase mr-2">Filter Kategori:</span>
-            
-            <label class="cursor-pointer">
-                <input type="checkbox" name="filterType" value="general" checked class="peer sr-only" onchange="applyFilter()">
-                <div class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-500 peer-checked:bg-bps-blue peer-checked:text-white transition-all shadow-sm hover:bg-gray-200 border border-transparent peer-checked:border-bps-blue ring-offset-2 peer-focus:ring-2 ring-bps-blue/50">
-                    🔵 Umum
+         <div class="mb-6">
+            <p class="text-sm font-bold text-gray-500 uppercase mb-3 text-center sm:text-left">Filter Kategori:</p>
+            <div id="dynamicFilterContainer" class="flex flex-wrap items-center justify-center sm:justify-start gap-3 select-none">
                 </div>
-            </label>
-
-            <label class="cursor-pointer">
-                <input type="checkbox" name="filterType" value="meeting" checked class="peer sr-only" onchange="applyFilter()">
-                <div class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-500 peer-checked:bg-green-600 peer-checked:text-white transition-all shadow-sm hover:bg-gray-200 border border-transparent peer-checked:border-green-600 ring-offset-2 peer-focus:ring-2 ring-green-600/50">
-                    🟢 Rapat
-                </div>
-            </label>
-
-            <label class="cursor-pointer">
-                <input type="checkbox" name="filterType" value="deadline" checked class="peer sr-only" onchange="applyFilter()">
-                <div class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-500 peer-checked:bg-red-600 peer-checked:text-white transition-all shadow-sm hover:bg-gray-200 border border-transparent peer-checked:border-red-600 ring-offset-2 peer-focus:ring-2 ring-red-600/50">
-                    🔴 Deadline
-                </div>
-            </label>
-
-            <label class="cursor-pointer">
-                <input type="checkbox" name="filterType" value="holiday" checked class="peer sr-only" onchange="applyFilter()">
-                <div class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-500 peer-checked:bg-orange-500 peer-checked:text-white transition-all shadow-sm hover:bg-gray-200 border border-transparent peer-checked:border-orange-500 ring-offset-2 peer-focus:ring-2 ring-orange-500/50">
-                    🟠 Libur/Cuti
-                </div>
-            </label>
          </div>
          <div id="loading" class="text-center py-10">
            <svg class="animate-spin h-10 w-10 text-bps-blue mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -150,7 +162,7 @@
      <div class="flex min-h-full items-center justify-center p-4">
       <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-md w-full">
        
-       <div class="bg-bps-blue px-6 py-5 relative">
+       <div id="modalHeader" class="bg-bps-blue px-6 py-5 relative transition-colors duration-300">
          <h3 class="text-lg font-bold text-white pr-8" id="modalTitle">Judul Kegiatan</h3>
          <button onclick="closeEventModal()" class="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 rounded-full p-1 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -201,99 +213,214 @@
     </div>
    </div>
 
-   <footer class="bg-bps-blue py-8 mt-auto">
-    <div class="text-center text-white/60 text-sm">
-      <p>© 2026 Change Agent Network BPS Provinsi NTB.</p>
+   <!-- Footer -->
+   <footer class="bg-bps-blue py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center">
+      <div class="flex items-center justify-center gap-3 mb-6">
+       <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+       </div>
+       <div class="text-left"><span class="font-bold text-white text-xl">Change Agent Network</span> <span class="text-white/70 text-sm block">BPS Provinsi NTB</span>
+       </div>
+      </div>
+      <div class="flex justify-center gap-4 mb-8">
+        <a href="#beranda" class="text-white/70 hover:text-white transition-colors">Beranda</a> <span class="text-white/30">|</span> 
+        <a href="#tim" class="text-white/70 hover:text-white transition-colors">Tim CAN</a> <span class="text-white/30">|</span> 
+        <a href="#program" class="text-white/70 hover:text-white transition-colors">Program</a><span class="text-white/30">|</span> 
+        <a href="timeline.html" class="text-white/70 hover:text-white transition-colors">Timeline</a>
+      </div>
+      <div class="border-t border-white/10 pt-8">
+       <p id="footer-text" class="text-white/60 text-sm">© 2026 Change Agent Network BPS Provinsi NTB. All Rights Reserved.</p>
+      </div>
+     </div>
     </div>
    </footer>
 
    <script>
-    // Variable Global
     let calendar;
     let allEvents = []; 
+    // Menyimpan mapping Warna berdasarkan Tipe yang ditemukan
+    let typeColorMap = {};
 
-    // Helper: Konversi Tanggal Excel ke JS Date yang Valid
+    // Palet warna default untuk tipe yang belum dikenal (Dynamic Coloring)
+    const colorPalette = [
+        '#003366', // BPS Blue (Default)
+        '#16a34a', // Green (Meeting)
+        '#dc2626', // Red (Deadline)
+        '#f59e0b', // Amber (Holiday)
+        '#7c3aed', // Violet
+        '#0891b2', // Cyan
+        '#db2777', // Pink
+        '#4f46e5', // Indigo
+        '#0d9488', // Teal
+        '#9333ea'  // Purple
+    ];
+
+    // Warna Hardcoded untuk tipe standar
+    const predefinedColors = {
+        'meeting': '#16a34a', // Green
+        'rapat': '#16a34a',
+        'deadline': '#dc2626', // Red
+        'batas': '#dc2626',
+        'holiday': '#f59e0b', // Orange
+        'libur': '#f59e0b',
+        'cuti': '#f59e0b',
+        'general': '#003366', // Blue
+        'umum': '#003366'
+    };
+
     function parseDate(input) {
         if (!input) return null;
-        
-        // Jika input sudah berupa object Date (karena cellDates: true)
         if (input instanceof Date && !isNaN(input)) {
-            // Koreksi Timezone Offset (SheetJS kadang membaca sebagai UTC)
             const offset = input.getTimezoneOffset() * 60000;
             return new Date(input.getTime() - offset);
         }
-
-        // Jika input string "YYYY-MM-DD"
         if (typeof input === 'string') {
             const parsed = new Date(input);
             if (!isNaN(parsed)) return parsed;
         }
-
         return null;
+    }
+
+    // Fungsi untuk mendapatkan warna berdasarkan tipe
+    function getColorForType(type) {
+        const typeKey = type.toLowerCase().trim();
+        
+        // 1. Cek warna standar
+        if (predefinedColors[typeKey]) return predefinedColors[typeKey];
+        
+        // 2. Cek apakah sudah pernah di-assign warna dynamic sebelumnya
+        if (typeColorMap[typeKey]) return typeColorMap[typeKey];
+
+        // 3. Assign warna baru dari palet (hash simple)
+        let hash = 0;
+        for (let i = 0; i < typeKey.length; i++) {
+            hash = typeKey.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        // Ambil warna dari palette (skip 4 pertama yg sudah dipakai standar)
+        const index = Math.abs(hash) % (colorPalette.length - 4) + 4; 
+        const newColor = colorPalette[index];
+        
+        typeColorMap[typeKey] = newColor;
+        return newColor;
     }
 
     async function loadExcelData() {
       try {
         const response = await fetch('data/jadwal.xlsx'); 
-        if (!response.ok) throw new Error("Gagal load excel");
+        if (!response.ok) return [];
 
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         
-        // cellDates: true PENTING agar Excel Date dibaca sebagai Object Date
         const rawData = XLSX.utils.sheet_to_json(worksheet, { cellDates: true, defval: "" });
         
-        console.log("📊 Data Mentah dari Excel:", rawData); // Cek Console F12
+        // Set untuk menyimpan semua tipe unik yang ditemukan
+        const uniqueTypes = new Set();
 
-        const mappedEvents = rawData.map((item, index) => {
-          // 1. Validasi Judul & Tanggal Wajib
-          if (!item.title || !item.start) {
-              console.warn(`⚠️ Baris ${index + 2} dilewati: Judul atau Tanggal Start kosong.`);
-              return null;
-          }
+        const events = rawData.map(item => {
+          if (!item.title || !item.start) return null;
 
-          // 2. Parsing Tanggal Aman
           const startDate = parseDate(item.start);
           const endDate = parseDate(item.end);
+          if (!startDate) return null;
 
-          if (!startDate) {
-              console.warn(`⚠️ Baris ${index + 2} dilewati: Format Tanggal Salah (${item.start})`);
-              return null;
-          }
+          // Bersihkan tipe data
+          let rawType = (item.type || 'Umum').toString().trim();
+          // Huruf kapital awal untuk display (Meeting, Workshop, dll)
+          const displayType = rawType.charAt(0).toUpperCase() + rawType.slice(1);
+          const typeKey = displayType.toLowerCase();
 
-          // 3. Normalisasi Tipe
-          let className = 'bg-event'; 
-          const typeLower = (item.type || 'general').toString().toLowerCase().trim();
+          uniqueTypes.add(displayType);
 
-          if (typeLower.includes('meet') || typeLower.includes('rapat')) className = 'bg-meeting'; 
-          if (typeLower.includes('dead') || typeLower.includes('batas')) className = 'bg-deadline'; 
-          if (typeLower.includes('holi') || typeLower.includes('libur')) className = 'bg-holiday'; 
+          // Dapatkan warna
+          const color = getColorForType(displayType);
 
           return {
             title: item.title,
             start: startDate,
-            end: endDate || startDate, // Jika end kosong, samakan dengan start
-            allDay: !item.end, // Jika tidak ada jam selesai, anggap seharian
+            end: endDate || startDate,
+            allDay: !item.end, 
+            backgroundColor: color, // FullCalendar property: Background
+            borderColor: color,     // FullCalendar property: Border
+            textColor: '#ffffff',   // PENTING: Force text putih di month view
             extendedProps: {
               description: item.description || '-',
-              filterType: ['meeting', 'deadline', 'holiday'].includes(typeLower) ? typeLower : 'general',
-              type: item.type || 'General',
-              petugas: item.petugas || '-'
-            },
-            className: className
+              type: displayType, // Tipe asli untuk display
+              filterKey: typeKey, // Tipe lowercase untuk filtering
+              petugas: item.petugas || '-',
+              color: color // Simpan warna untuk modal
+            }
           };
-        }).filter(item => item !== null); // Hapus data yang null/invalid
+        }).filter(item => item !== null);
 
-        console.log("✅ Event Valid:", mappedEvents);
-        return mappedEvents;
+        // Generate Filter UI setelah tahu semua tipe unik
+        generateFilterUI(Array.from(uniqueTypes));
+
+        return events;
 
       } catch (error) {
-        console.error("❌ Error System:", error);
-        alert("Gagal membaca Excel. Pastikan format kolom sesuai.");
+        console.error("Error:", error);
         return [];
       }
+    }
+
+    // Fungsi Generate Filter Checkbox Dinamis
+    function generateFilterUI(types) {
+        const container = document.getElementById('dynamicFilterContainer');
+        container.innerHTML = ''; // Reset
+
+        // Urutkan: Umum dulu, sisanya abjad
+        types.sort((a, b) => {
+            if(a.toLowerCase() === 'umum' || a.toLowerCase() === 'general') return -1;
+            if(b.toLowerCase() === 'umum' || b.toLowerCase() === 'general') return 1;
+            return a.localeCompare(b);
+        });
+
+        types.forEach(type => {
+            const color = getColorForType(type);
+            const typeKey = type.toLowerCase();
+            
+            const label = document.createElement('label');
+            label.className = 'cursor-pointer group';
+            label.innerHTML = `
+                <input type="checkbox" name="filterType" value="${typeKey}" checked class="peer sr-only" onchange="applyFilter()">
+                <div class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-500 
+                            peer-checked:text-white transition-all shadow-sm hover:bg-gray-200 
+                            border-2 border-transparent peer-checked:border-transparent"
+                     style="--active-color: ${color}">
+                    <span class="inline-block w-2 h-2 rounded-full mr-2 bg-[${color}] group-hover:scale-125 transition-transform" style="background-color: ${color}"></span>
+                    ${type}
+                </div>
+            `;
+            
+            // Hack CSS in JS untuk dynamic peer-checked background color
+            // Karena Tailwind tidak bisa dynamic class arbitray values dengan mudah di runtime
+            const div = label.querySelector('div');
+            
+            // Event listener manual untuk visual active state karena keterbatasan inline style pada peer-checked
+            const input = label.querySelector('input');
+            const updateVisual = () => {
+                if(input.checked) {
+                    div.style.backgroundColor = color;
+                    div.style.color = 'white';
+                    div.querySelector('span').style.backgroundColor = 'white'; // Dot jadi putih
+                } else {
+                    div.style.backgroundColor = '#f3f4f6'; // gray-100
+                    div.style.color = '#6b7280'; // gray-500
+                    div.querySelector('span').style.backgroundColor = color; // Dot balik warna asli
+                }
+            };
+            
+            input.addEventListener('change', updateVisual);
+            updateVisual(); // Init state
+
+            container.appendChild(label);
+        });
     }
 
     function applyFilter() {
@@ -303,12 +430,7 @@
         const activeFilters = Array.from(checkboxes).map(cb => cb.value);
 
         const filteredEvents = allEvents.filter(event => {
-            const eventType = event.extendedProps.filterType;
-            // Logika: Tampilkan jika tipe event ada di checkbox yang aktif
-            if (activeFilters.includes(eventType)) return true;
-            // Fallback: Tampilkan tipe 'lain-lain' jika checkbox General aktif
-            if (activeFilters.includes('general') && !['meeting', 'deadline', 'holiday'].includes(eventType)) return true;
-            return false;
+            return activeFilters.includes(event.extendedProps.filterKey);
         });
 
         calendar.removeAllEvents();
@@ -322,45 +444,38 @@
       allEvents = await loadExcelData();
       loadingEl.style.display = 'none';
 
-      if (allEvents.length === 0) {
-          alert("Data Excel terbaca KOSONG. Cek header kolom Excel (Baris 1 harus: title, start, end, type)");
-      }
-
       calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,listMonth'
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listMonth'
         },
         buttonText: {
-          today: 'Hari Ini',
-          month: 'Bulan',
-          week: 'Minggu',
-          list: 'Agenda'
+            today: 'Hari Ini', month: 'Bulan', week: 'Minggu', list: 'Agenda'
         },
         locale: 'id',
-        events: allEvents, // Load awal
-        eventTimeFormat: { 
-            hour: '2-digit', minute: '2-digit', meridiem: false
-        },
-        eventClick: function(info) {
-          showEventModal(info.event);
-        },
+        events: allEvents,
+        eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false },
+        eventClick: function(info) { showEventModal(info.event); },
         height: 'auto',
         aspectRatio: 1.8,
-        dayMaxEvents: true 
+        dayMaxEvents: true,
+        
+        // PENTING: Render hook untuk memastikan styling list view benar
+        eventDidMount: function(info) {
+            // Jika view adalah LIST
+            if (info.view.type.includes('list')) {
+                const dot = info.el.querySelector('.fc-list-event-dot');
+                if (dot) dot.style.borderColor = info.event.backgroundColor;
+            }
+        }
       });
 
       calendar.render();
-      
-      // Jika ada data, otomatis lompat ke bulan kejadian pertama agar user tidak bingung
-      if (allEvents.length > 0) {
-          calendar.gotoDate(allEvents[0].start);
-      }
+      if (allEvents.length > 0) calendar.gotoDate(allEvents[0].start);
     });
 
-    // --- MODAL FUNCTIONS (TIDAK BERUBAH) ---
     function showEventModal(event) {
       document.getElementById('modalTitle').innerText = event.title;
       
@@ -369,10 +484,8 @@
       
       const startDate = event.start;
       const endDate = event.end;
-
       let dateString = startDate.toLocaleDateString('id-ID', optionsDate);
       
-      // Tampilkan jam jika bukan event seharian (allDay)
       if (!event.allDay) {
         dateString += ` • ${startDate.toLocaleTimeString('id-ID', optionsTime)}`;
         if (endDate && endDate > startDate) {
@@ -385,14 +498,14 @@
       document.getElementById('modalPetugas').innerText = event.extendedProps.petugas;
       
       const typeEl = document.getElementById('modalType');
-      typeEl.innerText = event.extendedProps.type.toUpperCase();
+      const color = event.extendedProps.color;
       
-      // Reset & Set Color
+      typeEl.innerText = event.extendedProps.type.toUpperCase();
       typeEl.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-white';
-      if (event.classNames.includes('bg-meeting')) typeEl.classList.add('bg-green-600');
-      else if (event.classNames.includes('bg-deadline')) typeEl.classList.add('bg-red-600');
-      else if (event.classNames.includes('bg-holiday')) typeEl.classList.add('bg-orange-500');
-      else typeEl.classList.add('bg-bps-blue');
+      typeEl.style.backgroundColor = color;
+
+      // Update Header Modal Color
+      document.getElementById('modalHeader').style.backgroundColor = color;
 
       document.getElementById('eventModal').classList.remove('hidden');
     }
