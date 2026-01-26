@@ -38,6 +38,25 @@
       --fc-today-bg-color: rgba(245, 124, 0, 0.05);
     }
 
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #f57c00;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
     /* --- PERBAIKAN TAMPILAN KALENDER (VISIBILITY) --- */
     
     /* 1. Tampilan BULAN (Grid) */
@@ -90,6 +109,7 @@
 </head>
 <body class="h-full font-sans text-gray-800 bg-gray-50 flex flex-col">
 
+  <!-- header -->
   <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16 md:h-20">
@@ -110,8 +130,13 @@
        </div>
       </div>
       <div class="hidden md:flex items-center gap-8">
-        <a href="index.html" class="font-medium text-gray-700 hover:text-bps-blue transition-colors">Beranda</a> 
-        <a href="#" class="font-bold text-bps-blue">Timeline</a>
+        <!-- <a href="index.html" class="font-medium text-gray-700 hover:text-bps-blue transition-colors">Beranda</a> 
+        <a href="#" class="font-bold text-bps-blue">Timeline</a> -->
+        
+        <a href="index.html" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Beranda</a> 
+        <a href="index.html#tim" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Tim CAN</a> 
+        <a href="index.html#program" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Program Unggulan</a>
+        <a href="timeline.html" class="nav-link font-medium text-gray-700 hover:text-bps-blue transition-colors">Timeline</a>
       </div>
       <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2">
         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
@@ -119,8 +144,13 @@
      </div>
      <div id="mobile-menu" class="hidden md:hidden pb-4">
       <div class="flex flex-col gap-2">
-        <a href="index.html" class="px-4 py-3 rounded-lg font-medium text-gray-700">Beranda</a>
-        <a href="#" class="px-4 py-3 rounded-lg font-bold text-bps-blue bg-blue-50">Timeline</a>
+        <!-- <a href="index.html" class="px-4 py-3 rounded-lg font-medium text-gray-700">Beranda</a>
+        <a href="#" class="px-4 py-3 rounded-lg font-bold text-bps-blue bg-blue-50">Timeline</a> -->
+
+        <a href="index.html" class="px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-bps-blue/5 hover:text-bps-blue transition-colors">Beranda</a> 
+        <a href="index.html#tim" class="px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-bps-blue/5 hover:text-bps-blue transition-colors">Tim CAN</a> 
+        <a href="index.html#program" class="px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-bps-blue/5 hover:text-bps-blue transition-colors">Program Unggulan</a>
+        <a href="timeline.html" class="px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-bps-blue/5 hover:text-bps-blue transition-colors">Timeline</a>
       </div>
      </div>
     </div>
@@ -129,7 +159,7 @@
    <section class="pt-32 pb-10 bg-gradient-to-r from-bps-blue to-bps-green">
      <div class="max-w-7xl mx-auto px-4 text-center">
        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Kalender Kegiatan</h1>
-       <p class="text-white/80 text-lg max-w-2xl mx-auto">Jadwal kegiatan, tenggat waktu, dan agenda penting Change Agent Network BPS Provinsi NTB.</p>
+       <p class="text-white/80 text-lg max-w-2xl mx-auto">Jadwal kegiatan, tenggat waktu, dan agenda penting program-program Change Agent Network BPS Provinsi NTB.</p>
      </div>
    </section>
 
@@ -137,11 +167,28 @@
      <div class="max-w-7xl mx-auto">
        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
          
-         <div class="mb-6">
-            <p class="text-sm font-bold text-gray-500 uppercase mb-3 text-center sm:text-left">Filter Kategori:</p>
-            <div id="dynamicFilterContainer" class="flex flex-wrap items-center justify-center sm:justify-start gap-3 select-none">
+         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+            
+           <div class="w-full md:w-2/3">
+               <p class="text-sm font-bold text-gray-500 uppercase mb-2">Filter Kategori:</p>
+               <div id="dynamicFilterContainer" class="flex flex-wrap items-center gap-2 select-none">
+                   </div>
+           </div>
+
+            <div class="w-full md:w-1/3">
+                <p class="text-sm font-bold text-gray-500 uppercase mb-2">Cari Petugas / Kegiatan:</p>
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Ketik nama petugas..." 
+                           class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-bps-blue focus:border-transparent transition-shadow"
+                           oninput="applyFilter()">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
                 </div>
+            </div>
+
          </div>
+         
          <div id="loading" class="text-center py-10">
            <svg class="animate-spin h-10 w-10 text-bps-blue mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -255,20 +302,19 @@
         '#db2777', // Pink
         '#4f46e5', // Indigo
         '#0d9488', // Teal
-        '#9333ea'  // Purple
+        '#9333ea'  // Purple   
     ];
 
     // Warna Hardcoded untuk tipe standar
     const predefinedColors = {
-        'meeting': '#16a34a', // Green
-        'rapat': '#16a34a',
-        'deadline': '#dc2626', // Red
-        'batas': '#dc2626',
-        'holiday': '#f59e0b', // Orange
-        'libur': '#f59e0b',
-        'cuti': '#f59e0b',
-        'general': '#003366', // Blue
-        'umum': '#003366'
+        'Coach Me Programme': '#003366', // bps-blue
+        'Knowledge Management System': '#16a34a', // bps-green
+        'TGIM' : '#f57c00', //bps-orange
+        'GTQ': 'yellow-500',
+        'BPS Goes To School': 'cyan-500', 
+        'S3 Reborn': 'indigo-500', 
+        'Doa Pagi': '#0d9488', // Teal
+        'RB Voice': '#7c3aed', // Violet
     };
 
     function parseDate(input) {
@@ -423,14 +469,32 @@
         });
     }
 
+    // --- MAIN FILTER LOGIC (UPDATED) ---
     function applyFilter() {
         if (!calendar) return;
 
+        // 1. Ambil Keyword Pencarian
+        const searchInput = document.getElementById('searchInput');
+        const searchText = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+        // 2. Ambil Kategori yang dicentang
         const checkboxes = document.querySelectorAll('input[name="filterType"]:checked');
         const activeFilters = Array.from(checkboxes).map(cb => cb.value);
 
+        // 3. Lakukan Filtering
         const filteredEvents = allEvents.filter(event => {
-            return activeFilters.includes(event.extendedProps.filterKey);
+            // Syarat 1: Kategori cocok?
+            const eventType = event.extendedProps.filterKey;
+            const matchesCategory = activeFilters.includes(eventType);
+
+            // Syarat 2: Pencarian Nama Petugas ATAU Judul cocok?
+            const petugas = (event.extendedProps.petugas || "").toLowerCase();
+            const title = (event.title || "").toLowerCase();
+            
+            // Pencarian: Jika kosong, dianggap cocok (true). Jika ada isi, cek includes.
+            const matchesSearch = searchText === "" || petugas.includes(searchText) || title.includes(searchText);
+
+            return matchesCategory && matchesSearch;
         });
 
         calendar.removeAllEvents();
